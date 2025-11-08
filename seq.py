@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 class Seq:
 
     def __init__(self, sequence: str):
         self.__seq = sequence
+        self.__complements = {'A':'T', 'T':'A', 'C':'G', 'G':"C"}
 
-    
-    def __str__(self):
-        pass
+    def __str__(self) -> str:
+        """Returns sequence as a string"""
+        
+        return str(self.__seq)
 
     def __repr__(self):
         pass
@@ -40,11 +44,35 @@ class Seq:
                 counter += 1
         return counter
 
-    def complement(self):
-        pass
+    def complement(self) -> Seq:
+        """Finds the complement of the sequence
 
-    def reverse_complement(self):
-        pass
+        Returns:
+            Seq: Complement as Seq object
+        """
+        
+        # Build string using the complements dictionary 
+        new_sequence = ''
+        for base in self.__seq:
+            new_sequence += self.__complements[base]
+        
+        return Seq(new_sequence)
+            
+
+    def reverse_complement(self) -> Seq:
+        """Reverse complement of sequence
+
+        Returns:
+            Seq: Reverse complement as a Seq object
+        """
+
+        # Similar to .complement() but builds string in reverse
+        new_sequence = ''
+        for base in self.__seq:
+            
+            new_sequence = self.__complements[base] + new_sequence
+        
+        return Seq(new_sequence)
 
     def transcribe(self):
         pass
@@ -79,6 +107,8 @@ def main():
     print(my_seq.count('A'))
     print(len(my_seq))
     print(my_seq.gc_content())
+    print(my_seq.complement())
+    print(my_seq.reverse_complement())
 
 if __name__ == '__main__':
     main()
