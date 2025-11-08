@@ -1,3 +1,7 @@
+"""Consideration: I want the object to be able to handle DNA, RNA, and Amino acids
+Right now it only handles DNA
+"""
+
 from __future__ import annotations
 
 class Seq:
@@ -74,8 +78,26 @@ class Seq:
         
         return Seq(new_sequence)
 
-    def transcribe(self):
-        pass
+    def transcribe(self) -> Seq:
+        """Turns sequence into mRNA transcript. Assumes coding strand is 
+        entered. 
+
+        Returns:
+            Seq: mRNA transcript as a Sequence
+        """
+
+        # Could just use .replace('T', 'U') but I wanted to build my own
+        new_seq = ''
+        for base in self.__seq:
+            if base == 'T':
+                new_seq += 'U'
+            else:
+                new_seq += base
+        
+        return Seq(new_seq)
+
+        
+        
 
     def back_transcribe(self):
         pass
@@ -109,6 +131,7 @@ def main():
     print(my_seq.gc_content())
     print(my_seq.complement())
     print(my_seq.reverse_complement())
+    print(my_seq.transcribe())
 
 if __name__ == '__main__':
     main()
