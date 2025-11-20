@@ -1,10 +1,14 @@
 """Consideration: I want the object to be able to handle DNA, RNA, and Amino acids
 Right now it only handles DNA
+
+TODO: Finish making this as just a DnaSeq object, but I need to start over and rethink how I'm gonna
+have a sequence object handle eveyrthing. 
+
 """
 
 from __future__ import annotations
 
-class Seq:
+class DnaSeq:
 
     def __init__(self, sequence: str):
         self.__seq = sequence
@@ -18,7 +22,12 @@ class Seq:
     def __repr__(self):
         pass
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Return length of sequence
+
+        Returns:
+            int: Number of letters in sequence
+        """
         
         return len(self.__seq)
 
@@ -27,6 +36,20 @@ class Seq:
 
     def __eq__(self, other):
         pass
+
+    def reverse(self) -> DnaSeq:
+        """Reverse the sequences
+
+        Returns:
+            DnaSeq: Reverse DNA sequence
+        """
+
+        # Builds string in reverse
+        new_sequence = ''
+        for letter in self.__seq:
+            new_sequence = letter + new_sequence
+        
+        return DnaSeq(new_sequence)
 
     def count(self, sub: str):
         """Returns number of times a subsequence occurs in the sequence
@@ -48,7 +71,7 @@ class Seq:
                 counter += 1
         return counter
 
-    def complement(self) -> Seq:
+    def complement(self) -> DnaSeq:
         """Finds the complement of the sequence
 
         Returns:
@@ -60,33 +83,35 @@ class Seq:
         for base in self.__seq:
             new_sequence += self.__complements[base]
         
-        return Seq(new_sequence)
+        return DnaSeq(new_sequence)
             
-
-    def reverse_complement(self) -> Seq:
+    def reverse_complement(self) -> DnaSeq:
         """Reverse complement of sequence
 
         Returns:
             Seq: Reverse complement as a Seq object
         """
 
-        # Similar to .complement() but builds string in reverse
-        new_sequence = ''
-        for base in self.__seq:
-            
-            new_sequence = self.__complements[base] + new_sequence
-        
-        return Seq(new_sequence)
+        # Find the complement
+        complement = self.complement()
 
-    def transcribe(self) -> Seq:
+        # then reverse it
+        reverse = complement.reverse()
+
+        return reverse
+       
+    def transcribe(self) -> DnaSeq:
         """Turns sequence into mRNA transcript. Assumes coding strand is 
         entered. 
+
+        TODO Return RNASEQ
 
         Returns:
             Seq: mRNA transcript as a Sequence
         """
 
         # Could just use .replace('T', 'U') but I wanted to build my own
+        # Uses string concantenation to replace t's with u's
         new_seq = ''
         for base in self.__seq:
             if base == 'T':
@@ -94,13 +119,20 @@ class Seq:
             else:
                 new_seq += base
         
-        return Seq(new_seq)
+        return DnaSeq(new_seq)
 
-        
-        
+    def reverse_transcribe(self) -> DnaSeq:
+        """Reverse transcribed version of sequence
 
-    def back_transcribe(self):
-        pass
+        Returns:
+            DnaSeq: Sequence as a DnaSeq
+        """
+        
+        # transcribe sequence then reverse it
+        transcribe = self.transcribe()
+        reverse = transcribe.reverse()
+
+        return reverse
 
     def translate(self):
         pass
@@ -124,14 +156,16 @@ class Seq:
 
 
 def main():
-    
-    my_seq = Seq('ATGAGACGATGAG')
-    print(my_seq.count('A'))
-    print(len(my_seq))
-    print(my_seq.gc_content())
-    print(my_seq.complement())
-    print(my_seq.reverse_complement())
-    print(my_seq.transcribe())
+    orginal = 'ATGAGACGATGAG'
+    my_seq = DnaSeq(orginal)
+    print(f'orginal: {orginal}')
+    print(f'Number of A: {my_seq.count('A')}')
+    print(f'Sequence length: {len(my_seq)}')
+    print(f'Percent gc {my_seq.gc_content()}')
+    print(f'Complement: {my_seq.complement()}')
+    print(f'reverse complement: {my_seq.reverse_complement()}')
+    print(f'Transcribed: {my_seq.transcribe()}')
+    print(f'Reverse Transcribed: {my_seq.reverse_transcribe()}')
 
 if __name__ == '__main__':
     main()
